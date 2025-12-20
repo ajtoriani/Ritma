@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ritma</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='%236366f1' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M4 16C4 16 8 24 12 16C16 8 20 24 24 16C28 8 32 16 32 16'/></svg>">
+    <meta name="theme-color" content="#6366f1">
+    <link rel="manifest" href="manifest.json">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="background-decor"></div>
+
+    <div class="app-layout">
+        <header class="app-header">
+            <div class="brand">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#6366f1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 16C4 16 8 24 12 16C16 8 20 24 24 16C28 8 32 16 32 16"/>
+                </svg>
+                <span class="logo-text">Ritma</span>
+            </div>
+            <button id="btn-settings" class="icon-btn" aria-label="Reiniciar">
+                <i class="ph ph-arrow-counter-clockwise"></i>
+            </button>
+        </header>
+
+        <main id="app" class="container"></main>
+    </div>
+
+    <audio id="audio-focus" loop crossOrigin="anonymous">
+        <source src="https://actions.google.com/sounds/v1/weather/rain_heavy_loud.ogg" type="audio/ogg">
+        <source src="https://actions.google.com/sounds/v1/weather/rain_heavy_loud.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="audio-done" crossOrigin="anonymous">
+        <source src="https://actions.google.com/sounds/v1/cartoon/pop.ogg" type="audio/ogg">
+        <source src="https://actions.google.com/sounds/v1/cartoon/pop.mp3" type="audio/mpeg">
+    </audio>
+
+    <template id="tpl-checkin">
+        <div class="view-wrapper animate-enter">
+            <h1 class="title-center">Como está sua energia <br>agora?</h1>
+            <div class="energy-list" id="energy-options-container"></div>
+        </div>
+    </template>
+
+    <template id="tpl-dashboard">
+        <div class="view-wrapper animate-enter">
+            <div class="progress-header">
+                <div class="progress-info">
+                    <span class="greeting-text" id="greeting">Olá</span>
+                    <span class="counter-text" id="counter">0/0</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progress-bar"></div>
+                </div>
+            </div>
+
+            <div id="hero-area"></div>
+
+            <div id="next-list-area" class="next-list">
+                <div class="input-group">
+                    <input type="text" id="new-task-input" placeholder="Adicionar nova tarefa..." autocomplete="off">
+                    <button id="btn-add-task"><i class="ph ph-plus"></i></button>
+                </div>
+
+                <h3 class="section-title">Em seguida</h3>
+                <div id="queue-list"></div>
+            </div>
+
+            <div id="empty-state" class="empty-state hidden">
+                <div class="empty-illustration">
+                    <i class="ph ph-check-circle"></i>
+                </div>
+                <h2>Tudo limpo.</h2>
+                <p>Você respeitou seu ritmo hoje.<br>Aproveite o descanso.</p>
+                <button id="btn-reset" class="btn-outline">Novo Ciclo</button>
+            </div>
+        </div>
+    </template>
+
+    <script src="script.js"></script>
+</body>
+</html>
