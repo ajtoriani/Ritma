@@ -47,7 +47,7 @@ O projeto foi construído sem o uso de frameworks (como React ou Vue) para conso
 
 ##  Decisões de UX/UI
 
-Como Designer migrando para o Front-End, o foco foi na experiência do usuário:
+Como Designer e Front-End, o foco foi na experiência do usuário:
 
 1.  **Mobile First:** O layout foi pensado primariamente para o toque e telas verticais. No desktop, ele simula uma "app experience" flutuante.
 2.  **Feedback Imediato:** Cada ação (clicar, focar, concluir) possui uma resposta visual ou sonora, garantindo que o sistema pareça vivo.
