@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Ritma</title>
     
-    <link rel="icon" type="image/svg+xml" href="./icon.jpg">
-    <link rel="apple-touch-icon" href="./icon.jpg">
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="apple-touch-icon" href="icon.svg">
     <meta name="theme-color" content="#6366f1">
     <link rel="manifest" href="manifest.json">
     
@@ -27,11 +27,22 @@
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#6366f1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M4 16C4 16 8 24 12 16C16 8 20 24 24 16C28 8 32 16 32 16"/>
                 </svg>
-                <span class="logo-text">Ritma</span>
+                <div style="display: flex; flex-direction: column; line-height: 1;">
+                    <span class="logo-text">Ritma</span>
+                    <span id="streak-display" class="streak-badge hidden">
+                        <i class="ph-fill ph-fire"></i> 0 dias
+                    </span>
+                </div>
             </div>
-            <button id="btn-settings" class="icon-btn" aria-label="Reiniciar">
-                <i class="ph ph-arrow-counter-clockwise"></i>
-            </button>
+            
+            <div class="header-controls">
+                <button id="btn-theme" class="icon-btn" aria-label="Alterar Tema">
+                    <i class="ph ph-moon"></i>
+                </button>
+                <button id="btn-settings" class="icon-btn" aria-label="Reiniciar">
+                    <i class="ph ph-arrow-counter-clockwise"></i>
+                </button>
+            </div>
         </header>
 
         <main id="app" class="container"></main>

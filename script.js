@@ -28,21 +28,67 @@ const Store = {
     state: {
         energy: null,
         queue: [],
-        completedIds: []
+        completedIds: [],
+        theme: 'light',
+        streak: 0,
+        lastLoginDate: null
     },
     timer: null,
     timeLeft: 0,
     isAudioPlaying: false,
 
     init() {
-        const saved = localStorage.getItem('ritma_prod_v1');
-        if (saved) this.state = JSON.parse(saved);
+        const saved = localStorage.getItem('ritma_prod_v3');
+        if (saved) {
+            this.state = { ...this.state, ...JSON.parse(saved) };
+        }
+        
+        this.checkStreak();
+        this.applyTheme();
         UI.render();
+        UI.updateHeader(); 
     },
 
     save() {
-        localStorage.setItem('ritma_prod_v1', JSON.stringify(this.state));
-        UI.render();
+        localStorage.setItem('ritma_prod_v3', JSON.stringify(this.state));
+        UI.updateHeader(); 
+    },
+
+    checkStreak() {
+        const today = new Date().toDateString();
+        const last = this.state.lastLoginDate;
+
+        if (last !== today) {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            if (last === yesterday.toDateString()) {
+                this.state.streak += 1;
+            } else {
+                this.state.streak = 1; 
+            }
+            this.state.lastLoginDate = today;
+            this.save();
+        }
+    },
+
+    toggleTheme() {
+        this.state.theme = this.state.theme === 'light' ? 'dark' : 'light';
+        this.applyTheme();
+        this.save();
+    },
+
+    applyTheme() {
+        const body = document.body;
+        const btnIcon = document.querySelector('#btn-theme i');
+        
+        if (this.state.theme === 'dark') {
+            body.classList.add('dark');
+            if(btnIcon) btnIcon.className = 'ph ph-sun';
+        } else {
+            body.classList.remove('dark');
+            if(btnIcon) btnIcon.className = 'ph ph-moon';
+        }
     },
 
     setEnergy(level) {
@@ -52,6 +98,7 @@ const Store = {
             this.state.completedIds = [];
         }
         this.save();
+        UI.render(); 
     },
 
     addTask(text) {
@@ -65,6 +112,7 @@ const Store = {
         };
         this.state.queue.push(newTask);
         this.save();
+        UI.render();
     },
 
     startFocus(minutes, displayElement) {
@@ -124,7 +172,10 @@ const Store = {
 
         if (taskId && !this.state.completedIds.includes(taskId)) {
             this.state.completedIds.push(taskId);
-            setTimeout(() => this.save(), 1000); 
+            setTimeout(() => {
+                this.save();
+                UI.render(); 
+            }, 1000); 
         }
     },
 
@@ -135,12 +186,26 @@ const Store = {
             this.state.queue = [];
             this.state.completedIds = [];
             this.save();
+            UI.render();
         }
     }
 };
 
 const UI = {
     app: document.getElementById('app'),
+
+    updateHeader() {
+        const streakEl = document.getElementById('streak-display');
+        if (streakEl) {
+            streakEl.innerHTML = `<i class="ph-fill ph-fire"></i> ${Store.state.streak} dias`;
+            streakEl.classList.remove('hidden');
+        }
+        
+        const btnIcon = document.querySelector('#btn-theme i');
+        if(btnIcon) {
+            btnIcon.className = Store.state.theme === 'dark' ? 'ph ph-sun' : 'ph ph-moon';
+        }
+    },
 
     render() {
         this.app.innerHTML = '';
@@ -197,7 +262,6 @@ const UI = {
         const heroArea = clone.getElementById('hero-area');
         const nextList = clone.getElementById('next-list-area');
         const emptyState = clone.getElementById('empty-state');
-        const inputGroup = clone.querySelector('.input-group');
 
         if (isFinished) {
             heroArea.classList.add('hidden');
@@ -278,6 +342,8 @@ const UI = {
         if (isPlaying) {
             btn.innerHTML = `<i class="ph ph-pause"></i> Pausar`;
             btn.style.background = "#e0e7ff";
+            if(Store.state.theme === 'dark') btn.style.background = "#312e81"; // Ajuste para dark mode
+            
             display.classList.add('pulsing');
         } else {
             btn.innerHTML = `<i class="ph ph-play"></i> Focar`;
@@ -287,6 +353,7 @@ const UI = {
     }
 };
 
+document.getElementById('btn-theme').addEventListener('click', () => Store.toggleTheme());
 document.getElementById('btn-settings').addEventListener('click', () => Store.reset());
 
 Store.init();
