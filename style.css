@@ -77,7 +77,10 @@ body {
     flex-shrink: 0;
 }
 
-.brand { display: flex; align-items: center; gap: 8px; }
+.brand { display: flex; align-items: center; gap: 12px; }
+
+.logo-icon { width: 42px; height: auto; }
+
 .logo-text { font-weight: 800; font-size: 20px; color: var(--text-main); }
 
 .streak-badge {
