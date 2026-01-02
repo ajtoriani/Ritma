@@ -101,14 +101,16 @@ const Store = {
         UI.render(); 
     },
 
-    addTask(text) {
+    addTask(text, minutes) {
         if (!text.trim()) return;
+        const timeValue = parseInt(minutes) || 25;
+
         const newTask = {
             id: 'custom-' + Date.now(),
             text: text,
-            desc: "Tarefa personalizada",
+            desc: `Duração personalizada: ${timeValue} min`,
             icon: "check-circle", 
-            time: 25 
+            time: timeValue 
         };
         this.state.queue.push(newTask);
         this.save();
@@ -306,17 +308,18 @@ const UI = {
         heroArea.appendChild(hero);
 
         const input = clone.getElementById('new-task-input');
+        const inputTime = clone.getElementById('new-task-time');
         const btnAdd = clone.getElementById('btn-add-task');
         
         const handleAdd = () => {
-            Store.addTask(input.value);
+            Store.addTask(input.value, inputTime.value);
             input.value = '';
+            inputTime.value = '25';
         };
 
         btnAdd.onclick = handleAdd;
-        input.onkeypress = (e) => {
-            if(e.key === 'Enter') handleAdd();
-        };
+        input.onkeypress = (e) => { if(e.key === 'Enter') handleAdd(); };
+        inputTime.onkeypress = (e) => { if(e.key === 'Enter') handleAdd(); };
 
         const nextTasks = pending.slice(1);
         const listContainer = clone.getElementById('queue-list');
@@ -342,7 +345,7 @@ const UI = {
         if (isPlaying) {
             btn.innerHTML = `<i class="ph ph-pause"></i> Pausar`;
             btn.style.background = "#e0e7ff";
-            if(Store.state.theme === 'dark') btn.style.background = "#312e81"; // Ajuste para dark mode
+            if(Store.state.theme === 'dark') btn.style.background = "#312e81";
             
             display.classList.add('pulsing');
         } else {

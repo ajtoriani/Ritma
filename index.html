@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Ritma: O app de produtividade que respeita sua energia. Gerencie tarefas sem ansiedade, alinhe seu foco ao seu ritmo e conquiste mais bem-estar. Comece agora.">
     <title>Ritma</title>
     
+    <meta name="description" content="Ritma: O app de produtividade que respeita sua energia. Gerencie tarefas sem ansiedade, alinhe seu foco ao seu ritmo e conquiste mais bem-estar.">
+
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="theme-color" content="#6366f1">
@@ -16,7 +17,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="style.css?v=1.2">
 </head>
 <body>
 
@@ -81,8 +83,9 @@
 
             <div id="next-list-area" class="next-list">
                 <div class="input-group">
-                    <input type="text" id="new-task-input" placeholder="Adicionar nova tarefa..." autocomplete="off">
-                    <button id="btn-add-task"><i class="ph ph-plus"></i></button>
+                    <input type="text" id="new-task-input" placeholder="Nova tarefa..." autocomplete="off">
+                    <input type="number" id="new-task-time" placeholder="Min" value="25" min="1" max="120" title="Minutos">
+                    <button id="btn-add-task" aria-label="Adicionar"><i class="ph ph-plus"></i></button>
                 </div>
 
                 <h3 class="section-title">Em seguida</h3>
@@ -101,7 +104,6 @@
     </template>
 
     <script src="script.js"></script>
-    <script src="script.js"></script>
 
     <div vw class="enabled">
         <div vw-access-button class="active"></div>
@@ -113,7 +115,5 @@
     <script>
         new window.VLibras.Widget('https://vlibras.gov.br/app');
     </script>
-    </body>
-</html>
 </body>
 </html>
