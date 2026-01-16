@@ -85,7 +85,7 @@ body {
 .logo-icon { 
     width: 42px; 
     height: 42px; 
-    object-fit: contain;
+    object-fit: contain; /* Garante que o logo não distorça */
     flex-shrink: 0;
 }
 
@@ -188,6 +188,22 @@ body.dark .icon-btn:hover { background: #4338ca; }
 .hero-icon { font-size: 48px; color: var(--primary); margin-bottom: 16px; display: inline-block; }
 .hero-title { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
 .hero-desc { color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; font-size: 15px; }
+
+/* Estilos do Seletor de Som */
+.sound-selector-wrapper {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; margin-bottom: 16px;
+    color: var(--text-muted); font-size: 14px; font-weight: 700;
+}
+#sound-select {
+    padding: 6px 12px; border-radius: 12px;
+    border: 2px solid var(--border);
+    background-color: var(--bg-page); color: var(--text-main);
+    font-family: var(--font); font-weight: 700; font-size: 14px;
+    cursor: pointer; outline: none; transition: all 0.2s;
+}
+#sound-select:hover { border-color: var(--primary); }
+#sound-select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
 
 .timer-display {
     font-size: 48px; font-weight: 800;

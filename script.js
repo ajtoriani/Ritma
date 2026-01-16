@@ -5,6 +5,14 @@ const DATA = {
         if (h < 18) return "Boa tarde";
         return "Boa noite";
     },
+    // Biblioteca de Sons (Links Online)
+    sounds: {
+        rain: "sounds/rain.mp3",
+        lofi: "sounds/lofi.mp3",
+        coffee: "sounds/coffee.mp3",
+        white: "sounds/white.mp3",
+        fire: "sounds/fire.mp3"
+    },
     tasks: {
         baixa: [
             { id: 'b1', text: "Hidrate-se", desc: "Beba água. Tempo sugerido: 2 min", icon: "drop", time: 2 },
@@ -31,7 +39,8 @@ const Store = {
         completedIds: [],
         theme: 'light',
         streak: 0,
-        lastLoginDate: null
+        lastLoginDate: null,
+        selectedSound: 'rain' // Padrão
     },
     timer: null,
     timeLeft: 0,
@@ -91,6 +100,19 @@ const Store = {
         }
     },
 
+    setSound(soundKey) {
+        this.state.selectedSound = soundKey;
+        const audio = document.getElementById('audio-focus');
+        if (audio) {
+            audio.src = DATA.sounds[soundKey];
+            // Se já estiver tocando, troca o som imediatamente
+            if (this.isAudioPlaying) {
+                audio.play().catch(console.error);
+            }
+        }
+        this.save();
+    },
+
     setEnergy(level) {
         this.state.energy = level;
         if (this.state.queue.length === 0) {
@@ -108,7 +130,7 @@ const Store = {
         const newTask = {
             id: 'custom-' + Date.now(),
             text: text,
-            desc: `Duração personalizada: ${timeValue} min`,
+            desc: `Duração: ${timeValue} min`,
             icon: "check-circle", 
             time: timeValue 
         };
@@ -129,6 +151,8 @@ const Store = {
         this.timeLeft = minutes * 60; 
         
         if(audio) {
+            // Garante que o som certo está carregado
+            if(!audio.src) audio.src = DATA.sounds[this.state.selectedSound || 'rain'];
             audio.volume = 0.5;
             audio.play().catch(console.error);
         }
@@ -279,16 +303,43 @@ const UI = {
 
         const hero = document.createElement('div');
         hero.className = 'hero-card stagger-item';
+        
+        // --- HTML DO HERO + MENU DE SOM ---
         hero.innerHTML = `
             <i class="ph ph-${task.icon} hero-icon"></i>
             <h2 class="hero-title">${task.text}</h2>
             <p class="hero-desc">${task.desc}</p>
+            
+            <div class="sound-selector-wrapper">
+                <label for="sound-select"><i class="ph ph-speaker-high"></i> Som:</label>
+                <select id="sound-select">
+                    <option value="rain">Chuva (Padrão)</option>
+                    <option value="lofi">Lo-Fi (Estudo)</option>
+                    <option value="coffee">Cafeteria (Ambiente)</option>
+                    <option value="white">Ruído Branco (Foco)</option>
+                    <option value="fire">Lareira (Relax)</option>
+                </select>
+            </div>
+
             <div id="timer-display" class="timer-display">${taskTime}:00</div>
             <div class="timer-controls">
                 <button id="btn-focus" class="btn-secondary"><i class="ph ph-play"></i> Focar</button>
                 <button id="btn-complete" class="btn-primary"><i class="ph ph-check"></i> Feito</button>
             </div>
         `;
+        // ----------------------------------
+
+        // Configuração do Menu de Som
+        const soundSelect = hero.querySelector('#sound-select');
+        soundSelect.value = Store.state.selectedSound || 'rain';
+        
+        // Carrega o som inicial
+        const audioEl = document.getElementById('audio-focus');
+        if(audioEl) audioEl.src = DATA.sounds[soundSelect.value];
+
+        soundSelect.onchange = (e) => {
+            Store.setSound(e.target.value);
+        };
 
         const btnFocus = hero.querySelector('#btn-focus');
         const display = hero.querySelector('#timer-display');
