@@ -7,10 +7,12 @@
 > Uma aplicação web de produtividade focada no ritmo natural do usuário, combinando gerenciamento de tarefas com técnicas de foco e áudio ambiente.
 
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ajtp/)
-[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ajtoriani)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/anajuliatoriani/)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/anajuliatoriani)
+[![Portfólio](https://img.shields.io/badge/Portfólio-FF5722?style=for-the-badge&logo=&logoColor=white)](https://anajuliatorianipessoa.vercel.app/)
+[![E-mail](https://img.shields.io/badge/-Email-D97706?style=for-the-badge&logo=gmail&logoColor=white)](mailto:anajuliatoriani@gmail.com)
 [![Behance](https://img.shields.io/badge/Behance-1769ff?style=for-the-badge&logo=behance&logoColor=white)](https://www.behance.net/ajtp)
-[![E-mail](https://img.shields.io/badge/-Email-000?style=for-the-badge&logo=gmail&logoColor=AA42F7)](mailto:anajuliatoriani@gmail.com)
+
 
 ---
 
