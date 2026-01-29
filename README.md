@@ -91,9 +91,6 @@ ritma/
 Contribuições são bem-vindas! Se você tiver sugestões ou melhorias, sinta-se à vontade para abrir uma _issue_ ou um _pull request_.
 
 ## Contato
-Conecte-se comigo no LinkedIn:
-Ana Julia
-
 
 <p align="center"> <a href="https://www.linkedin.com/in/anajuliatoriani/"> <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"/> </a> <a href="https://github.com/anajuliatoriani"> <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"/> </a> <a href="https://anajuliatorianipessoa.vercel.app/"> <img src="https://img.shields.io/badge/Portfólio-FF5722?style=for-the-badge&logo=html5&logoColor=white"/> </a> <a href="mailto:anajuliatoriani@gmail.com"> <img src="https://img.shields.io/badge/Email-D97706?style=for-the-badge&logo=gmail&logoColor=white"/> </a> </p>
 
