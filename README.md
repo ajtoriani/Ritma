@@ -1,59 +1,64 @@
 #  Ritma - Foco & Fluidez
 
 ![Project Status](https://img.shields.io/badge/status-concluído-success)
-![Design](https://img.shields.io/badge/design-UX%2FUI-purple)
+![Design](https://img.shields.io/badge/design-Claymorphism-purple)
 ![Tech](https://img.shields.io/badge/tech-Vanilla%20JS-yellow)
+![Acessibilidade](https://img.shields.io/badge/a11y-VLibras-blue)
 
-> Uma aplicação web de produtividade focada no ritmo natural do usuário, combinando gerenciamento de tarefas com técnicas de foco e áudio ambiente.
-
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/anajuliatoriani/)
-[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/anajuliatoriani)
-[![Portfólio](https://img.shields.io/badge/Portfólio-FF5722?style=for-the-badge&logo=&logoColor=white)](https://anajuliatorianipessoa.vercel.app/)
-[![E-mail](https://img.shields.io/badge/-Email-D97706?style=for-the-badge&logo=gmail&logoColor=white)](mailto:anajuliatoriani@gmail.com)
-[![Behance](https://img.shields.io/badge/Behance-1769ff?style=for-the-badge&logo=behance&logoColor=white)](https://www.behance.net/ajtp)
-
+> **Uma aplicação de produtividade que respeita sua energia.**
+> O Ritma combina gerenciamento de tarefas com técnicas de foco, sons ambientes e gamificação para reduzir a ansiedade e aumentar a fluidez.
 
 ---
 
 ##  Sobre o Projeto
 
-O **Ritma** nasceu da necessidade de uma ferramenta de "To-Do List" que fosse menos mecânica e mais humana. Diferente de listas tradicionais, o Ritma começa perguntando: *"Como está sua energia agora?"*.
+O **Ritma** nasceu da necessidade de repensar a produtividade. Diferente de listas tradicionais mecânicas, o Ritma foca no **estado mental do usuário**.
 
-Com base na resposta (Baixa, Moderada ou Alta), o app sugere tarefas adequadas para aquele momento ou permite que o usuário crie suas próprias, respeitando seu ciclo produtivo.
+A aplicação utiliza o conceito de **Claymorphism** (interface "macia" e 3D) para transmitir conforto visual, e implementa funcionalidades que estimulam a dopamina de forma saudável, como streaks (ofensiva) e celebrações visuais.
 
-###  Funcionalidades Principais
-* **Check-in de Energia:** Interface inicial para calibrar as tarefas sugeridas.
-* **Modo Foco Imersivo:** Timer embutido com áudio de chuva (White Noise) para concentração profunda.
-* **Gamificação Leve:** Feedback visual e sonoro ao concluir tarefas.
-* **PWA (Progressive Web App):** Pode ser instalado no celular como um aplicativo nativo.
-* **Persistência de Dados:** O estado do app é salvo automaticamente, permitindo fechar e reabrir sem perder o progresso.
+###  Funcionalidades Principais (Versão 4.0)
+
+* **Gestão de Energia:** O fluxo começa perguntando *"Como você está?"*. O app adapta a experiência baseada na sua resposta.
+* **Soundscapes (Sons de Foco):** Player integrado com 5 opções de áudio para induzir o estado de flow: *Chuva, Lo-Fi, Cafeteria, Ruído Branco e Lareira*.
+* **Dark Mode & Light Mode:** Interface que se adapta à preferência do usuário com paletas de cores refinadas.
+* **Dashboard de Estatísticas:**
+    * Gráficos de atividade semanal (construídos puramente com CSS).
+    * Contador de tempo total de foco.
+    * Distribuição de tarefas por nível de energia.
+* **Gamificação:** Sistema de "Streak" (dias seguidos) e chuva de confetes ao concluir tarefas.
+* **Acessibilidade:** Integração nativa com **VLibras**.
+* **PWA (Progressive Web App):** Instalável em dispositivos móveis como um app nativo.
 
 ---
 
-##  Tecnologias Utilizadas
+##  Tecnologias & Engenharia
 
-O projeto foi construído sem o uso de frameworks (como React ou Vue) para consolidar os fundamentos da web moderna e arquitetura de software.
+O projeto foi desenvolvido intencionalmente **sem frameworks** (React/Vue) para demonstrar domínio profundo dos fundamentos da Web e arquitetura de software.
 
-* **HTML5 Semântico:** Uso da tag `<template>` para renderização dinâmica e performática.
+* **HTML5 Semântico:** Uso extensivo de tags `<template>` para renderização dinâmica e performance.
 * **CSS3 Moderno:**
-    * Variáveis CSS (`:root`) para consistência de Design System.
-    * Flexbox para layouts responsivos.
-    * Animações nativas (`@keyframes`) para micro-interações fluidas (60fps).
+    * **Claymorphism:** Uso avançado de `box-shadow` e `border-radius` para criar profundidade.
+    * **CSS Grid & Flexbox:** Para layouts complexos e responsivos.
+    * **CSS-Only Charts:** Gráficos de barras criados sem bibliotecas de visualização de dados.
 * **JavaScript (ES6+):**
-    * **State Management:** Implementação de um sistema de estado centralizado (Store) similar ao Redux/Vuex, mas com Vanilla JS.
-    * **LocalStorage API:** Para persistência de dados do usuário.
-    * **Audio API:** Manipulação de sons de ambiente e efeitos.
+    * **State Management:** Implementação de um padrão `Store` (similar ao Redux) com Vanilla JS para gerenciar o estado global.
+    * **Local Storage:** Persistência de dados complexos (histórico, preferências, tarefas).
+    * **Date Logic:** Algoritmos para cálculo de ofensiva (Streak) e dias da semana.
+* **Bibliotecas Externas (Mínimas):**
+    * `canvas-confetti`: Para o efeito visual de celebração.
+    * `Phosphor Icons`: Para iconografia consistente.
+    * `VLibras`: Para acessibilidade.
 
 ---
 
 ##  Decisões de UX/UI
 
-Como Designer e Front-End, o foco foi na experiência do usuário:
+Como Designer e Desenvolvedora, cada pixel teve um propósito:
 
-1.  **Mobile First:** O layout foi pensado primariamente para o toque e telas verticais. No desktop, ele simula uma "app experience" flutuante.
-2.  **Feedback Imediato:** Cada ação (clicar, focar, concluir) possui uma resposta visual ou sonora, garantindo que o sistema pareça vivo.
-3.  **Carga Cognitiva Reduzida:** O app mostra apenas uma tarefa principal por vez ("Hero Card"), evitando a ansiedade causada por listas longas.
+1.  **Estilo Claymorphism:** Escolhi fugir do "Flat Design" tradicional. O estilo "fofo" e 3D reduz a seriedade intimidadora de listas de tarefas corporativas.
+2.  **Associação Cognitiva:** A funcionalidade de sons não é aleatória; ela visa criar um "gatilho de foco" no cérebro do usuário (ex: Chuva = Hora de Concentrar).
+3.  **Feedback Loop:** A interface nunca deixa o usuário no vácuo. Ações têm sons, mudanças de cor ou animações.
+4.  **Eliminação de Atrito:** A opção de deletar tarefas e o reset diário dão ao usuário controle total sobre sua organização, sem punições.
 
 ---
 
@@ -61,11 +66,11 @@ Como Designer e Front-End, o foco foi na experiência do usuário:
 
 1.  Clone este repositório:
     ```bash
-    git clone [https://github.com/SEU_USUARIO/ritma.git](https://github.com/SEU_USUARIO/ritma.git)
+    git clone [https://github.com/ajtoriani/ritma.git](https://github.com/ajtoriani/ritma.git)
     ```
 2.  Abra a pasta do projeto.
 3.  Abra o arquivo `index.html` no seu navegador.
-    * *Dica:* Para que os áudios funcionem perfeitamente sem bloqueios de CORS, recomenda-se usar a extensão **Live Server** do VS Code.
+    * *Recomendação:* Utilize a extensão **Live Server** no VS Code para evitar bloqueios de segurança do navegador com os arquivos de áudio locais.
 
 ---
 
@@ -73,11 +78,13 @@ Como Designer e Front-End, o foco foi na experiência do usuário:
 
 ```text
 ritma/
-├── index.html      # Estrutura e Templates
-├── style.css       # Estilos e Animações
-├── script.js       # Lógica de Estado e UI
+├── sounds/         # Arquivos de áudio (mp3) locais
+├── index.html      # Estrutura, Templates e SEO
+├── style.css       # Estilização, Variáveis e Animações
+├── script.js       # Lógica de Negócio (Store) e UI
 ├── manifest.json   # Configuração PWA
-└── preview.png     # Imagem para o README
+└── icon.png        # Assets visuais
+
 ```
 
 ## Contribuições
@@ -88,10 +95,8 @@ Conecte-se comigo no LinkedIn:
 Ana Julia
 
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ajtp/)
-[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ajtoriani)
-[![Behance](https://img.shields.io/badge/Behance-1769ff?style=for-the-badge&logo=behance&logoColor=white)](https://www.behance.net/ajtp)
-[![E-mail](https://img.shields.io/badge/-Email-000?style=for-the-badge&logo=gmail&logoColor=AA42F7)](mailto:anajuliatoriani@gmail.com)
+<p align="center"> <a href="https://www.linkedin.com/in/anajuliatoriani/"> <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"/> </a> <a href="https://github.com/anajuliatoriani"> <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"/> </a> <a href="https://anajuliatorianipessoa.vercel.app/"> <img src="https://img.shields.io/badge/Portfólio-FF5722?style=for-the-badge&logo=html5&logoColor=white"/> </a> <a href="mailto:anajuliatoriani@gmail.com"> <img src="https://img.shields.io/badge/Email-D97706?style=for-the-badge&logo=gmail&logoColor=white"/> </a> </p>
+
 ---
 ## Licença
 Este projeto está sob a licença MIT.
