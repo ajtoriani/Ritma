@@ -36,7 +36,8 @@ const Store = {
         energy: null,
         queue: [],
         completedIds: [],
-        completions: [], // Array de timestamps para o gráfico real
+        completions: [], 
+        historyLog: [], 
         theme: 'light',
         streak: 0,
         lastLoginDate: null,
@@ -47,27 +48,31 @@ const Store = {
     isAudioPlaying: false,
 
     init() {
-        const saved = localStorage.getItem('ritma_v8_final'); 
+        const saved = localStorage.getItem('ritma_v14_final'); 
         if (saved) {
             this.state = { ...this.state, ...JSON.parse(saved) };
             if (!this.state.completions) this.state.completions = [];
+            if (!this.state.historyLog) this.state.historyLog = [];
         }
-        this.checkStreak();
+        
+        this.checkNewDay();
         this.applyTheme();
         UI.init();
         UI.render();
     },
 
     save() {
-        localStorage.setItem('ritma_v8_final', JSON.stringify(this.state));
+        localStorage.setItem('ritma_v14_final', JSON.stringify(this.state));
     },
 
-    checkStreak() {
+    checkNewDay() {
         const today = new Date().toDateString();
         const last = this.state.lastLoginDate;
+        
         if (last !== today) {
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
+            
             if (last === yesterday.toDateString()) {
                 this.state.streak += 1;
             } else if (last) {
@@ -75,6 +80,13 @@ const Store = {
             } else {
                 this.state.streak = 1; 
             }
+
+            if (last) {
+                this.state.energy = null;
+                this.state.queue = [];
+                this.state.completedIds = [];
+            }
+
             this.state.lastLoginDate = today;
             this.save();
         }
@@ -120,7 +132,7 @@ const Store = {
 
     addTask(text, minutes) {
         if (!text.trim()) return;
-        const timeValue = parseInt(minutes) || 25;
+        const timeValue = parseInt(minutes);
         const newTask = {
             id: 'custom-' + Date.now(),
             text: text,
@@ -139,6 +151,28 @@ const Store = {
             this.save();
             UI.render();
         }
+    },
+
+    setActiveTask(id) {
+        const index = this.state.queue.findIndex(t => t.id === id);
+        if (index > -1) {
+            const task = this.state.queue.splice(index, 1)[0];
+            this.state.queue.unshift(task);
+            this.save();
+            UI.render();
+        }
+    },
+
+    reorderTasks(oldIndex, newIndex) {
+        const pending = this.state.queue.filter(t => !this.state.completedIds.includes(t.id));
+        const completed = this.state.queue.filter(t => this.state.completedIds.includes(t.id));
+        const realOldIndex = oldIndex + 1;
+        const realNewIndex = newIndex + 1;
+        const [movedItem] = pending.splice(realOldIndex, 1);
+        pending.splice(realNewIndex, 0, movedItem);
+        this.state.queue = [...completed, ...pending];
+        this.save();
+        UI.render();
     },
 
     startFocus(minutes, displayElement) {
@@ -167,7 +201,6 @@ const Store = {
                 this.stopFocus();
                 displayElement.textContent = "00:00";
                 this.completeTask(null); 
-                alert("Tempo acabou!");
             }
         }, 1000);
     },
@@ -186,30 +219,31 @@ const Store = {
         const audioDone = document.getElementById('audio-done');
         if(audioDone) { audioDone.volume = 1.0; audioDone.play().catch(console.error); }
         
-        // EFEITO DE CONFETE
         if(typeof confetti === 'function') {
             confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
         }
 
         if (taskId && !this.state.completedIds.includes(taskId)) {
+            const taskObj = this.state.queue.find(t => t.id === taskId);
             this.state.completedIds.push(taskId);
-            this.state.completions.push(Date.now()); // Registra data para o gráfico
+            this.state.completions.push(Date.now()); 
+            
+            if (taskObj) {
+                this.state.historyLog.push({
+                    text: taskObj.text,
+                    time: taskObj.time || 25,
+                    timestamp: Date.now()
+                });
+            }
             setTimeout(() => { this.save(); UI.render(); }, 1000); 
         }
     },
 
-    reset() {
-        if(confirm('Iniciar novo dia?')) {
-            this.stopFocus();
-            this.state.energy = null;
-            this.state.queue = [];
-            this.state.completedIds = [];
-            this.save();
-            UI.render();
-        }
+    getTotalFocusTime() {
+        return this.state.historyLog.reduce((total, task) => total + (task.time || 25), 0);
     },
 
-    getTotalFocusTime() {
+    getCurrentSessionFocusTime() {
         const completed = this.state.queue.filter(t => this.state.completedIds.includes(t.id));
         return completed.reduce((total, task) => total + (task.time || 25), 0);
     },
@@ -227,7 +261,6 @@ const Store = {
     },
 
     getWeeklyStats() {
-        // [Dom, Seg, Ter, Qua, Qui, Sex, Sab]
         const days = [0, 0, 0, 0, 0, 0, 0];
         const now = new Date();
         const oneWeekAgo = new Date();
@@ -250,6 +283,7 @@ const UI = {
     init() {
         document.getElementById('nav-home').onclick = () => this.switchPage('home');
         document.getElementById('nav-stats').onclick = () => this.switchPage('stats');
+        document.getElementById('nav-calendar').onclick = () => this.switchPage('calendar');
     },
 
     switchPage(page) {
@@ -257,11 +291,14 @@ const UI = {
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
         if (page === 'home') document.getElementById('nav-home').classList.add('active');
         if (page === 'stats') document.getElementById('nav-stats').classList.add('active');
+        if (page === 'calendar') document.getElementById('nav-calendar').classList.add('active');
         this.render();
     },
 
     render() {
         this.app.innerHTML = '';
+        Store.checkNewDay();
+
         if (this.currentPage === 'home') {
             if (!Store.state.energy) {
                 this.renderCheckIn();
@@ -270,10 +307,9 @@ const UI = {
             }
         } else if (this.currentPage === 'stats') {
             this.renderStats();
+        } else if (this.currentPage === 'calendar') {
+            this.renderCalendar();
         }
-        
-        const resetBtn = document.getElementById('btn-reset-nav');
-        if(resetBtn) resetBtn.onclick = () => Store.reset();
     },
 
     renderCheckIn() {
@@ -312,11 +348,11 @@ const UI = {
         clone.getElementById('stat-tasks').textContent = `${completedIds.length}/${totalCount}`;
         clone.getElementById('stat-streak').textContent = Store.state.streak;
 
-        const totalMinutes = Store.getTotalFocusTime();
-        let timeString = `${totalMinutes}m`;
-        if (totalMinutes >= 60) {
-            const h = Math.floor(totalMinutes / 60);
-            const m = totalMinutes % 60;
+        const sessionMinutes = Store.getCurrentSessionFocusTime();
+        let timeString = `${sessionMinutes}m`;
+        if (sessionMinutes >= 60) {
+            const h = Math.floor(sessionMinutes / 60);
+            const m = sessionMinutes % 60;
             timeString = `${h}h ${m > 0 ? m + 'm' : ''}`;
         }
         clone.getElementById('stat-focus-today').textContent = timeString;
@@ -378,14 +414,17 @@ const UI = {
                 nextTasks.forEach(t => {
                     const row = document.createElement('div');
                     row.className = 'task-row stagger-item';
+                    
                     row.innerHTML = `
-                        <div style="display:flex; align-items:center; gap:8px; flex:1">
-                            <i class="ph-fill ph-circle"></i>
+                        <i class="ph-bold ph-dots-six-vertical drag-handle" title="Segure para arrastar"></i>
+                        <div class="task-content" title="Clique para focar nesta tarefa" style="display:flex; align-items:center; gap:8px; flex:1; cursor:pointer;">
+                            <i class="ph-fill ph-circle" style="color: var(--primary)"></i>
                             <span>${t.text}</span> 
                         </div>
                         <span style="font-size:12px; opacity:0.5; margin-right:8px">${t.time}m</span>
                         <button class="btn-delete" data-id="${t.id}"><i class="ph ph-trash"></i></button>
                     `;
+                    row.querySelector('.task-content').onclick = () => Store.setActiveTask(t.id);
                     row.querySelector('.btn-delete').onclick = () => Store.deleteTask(t.id);
                     nextList.appendChild(row);
                 });
@@ -404,13 +443,39 @@ const UI = {
         const btnAdd = clone.getElementById('btn-add-task');
         
         const handleAdd = () => {
+            if (!input.value.trim()) return;
+            if (!inputTime.value) {
+                alert('Por favor, defina o tempo em minutos para esta tarefa.');
+                inputTime.focus();
+                return;
+            }
             Store.addTask(input.value, inputTime.value);
-            input.value = ''; inputTime.value = '';
+            input.value = ''; 
+            inputTime.value = '';
         };
+
         btnAdd.onclick = handleAdd;
-        input.onkeypress = (e) => { if(e.key === 'Enter') handleAdd(); };
+        input.onkeydown = (e) => { if(e.key === 'Enter') handleAdd(); };
+        inputTime.onkeydown = (e) => { if(e.key === 'Enter') handleAdd(); };
 
         this.app.appendChild(clone);
+
+        const listToDrag = document.getElementById('queue-list');
+        if (listToDrag && pending.length > 1) {
+            new Sortable(listToDrag, {
+                handle: '.drag-handle', 
+                animation: 150, 
+                ghostClass: 'sortable-ghost', 
+                delay: 200, 
+                delayOnTouchOnly: true, 
+                fallbackTolerance: 5, 
+                onEnd: function (evt) {
+                    if (evt.oldIndex !== evt.newIndex) {
+                        Store.reorderTasks(evt.oldIndex, evt.newIndex);
+                    }
+                }
+            });
+        }
     },
 
     renderStats() {
@@ -422,18 +487,17 @@ const UI = {
         if (totalMinutes >= 60) {
             const h = Math.floor(totalMinutes / 60);
             const m = totalMinutes % 60;
-            timeString = `${h}h ${m}m`;
+            timeString = `${h}h ${m > 0 ? m + 'm' : ''}`;
         }
         clone.getElementById('total-focus-time').textContent = timeString;
 
-        // GRÁFICO REAL
-        const weeklyData = Store.getWeeklyStats(); // [Dom, Seg, ..., Sab]
+        const weeklyData = Store.getWeeklyStats();
         const maxVal = Math.max(...weeklyData) || 1;
         const daysLabels = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
         const todayIndex = new Date().getDay();
 
         const chartContainer = clone.getElementById('chart-bars-container');
-        chartContainer.innerHTML = ''; // Limpa antes de renderizar
+        chartContainer.innerHTML = '';
         
         weeklyData.forEach((val, idx) => {
             const pct = (val / maxVal) * 100;
@@ -457,6 +521,86 @@ const UI = {
         setBar('moderada', stats.moderada);
         setBar('baixa', stats.baixa);
         
+        this.app.appendChild(clone);
+    },
+
+    renderCalendar() {
+        const template = document.getElementById('tpl-calendar');
+        const clone = template.content.cloneNode(true);
+        
+        const grid = clone.getElementById('calendar-grid');
+        const selectedDateTasks = clone.getElementById('selected-date-tasks');
+
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth();
+
+        clone.getElementById('calendar-month-year').textContent = now.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+
+        const firstDayIndex = new Date(year, month, 1).getDay(); 
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        const log = Store.state.historyLog || [];
+        const tasksByDay = {};
+        
+        log.forEach(t => {
+            const d = new Date(t.timestamp);
+            if (d.getMonth() === month && d.getFullYear() === year) {
+                const day = d.getDate();
+                if (!tasksByDay[day]) tasksByDay[day] = [];
+                tasksByDay[day].push(t);
+            }
+        });
+
+        for (let i = 0; i < firstDayIndex; i++) {
+            const div = document.createElement('div');
+            div.className = 'calendar-day empty';
+            grid.appendChild(div);
+        }
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const div = document.createElement('div');
+            div.className = 'calendar-day stagger-item';
+            div.textContent = day;
+
+            const hasTasks = tasksByDay[day] && tasksByDay[day].length > 0;
+            if (hasTasks) {
+                div.classList.add('has-tasks');
+            }
+
+            if (day === now.getDate()) {
+                div.classList.add('today');
+            }
+
+            div.onclick = () => {
+                grid.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('active'));
+                div.classList.add('active');
+
+                selectedDateTasks.innerHTML = '';
+                
+                if (hasTasks) {
+                    const h4 = document.createElement('h4');
+                    h4.textContent = `Tarefas do dia ${day}:`;
+                    selectedDateTasks.appendChild(h4);
+
+                    tasksByDay[day].forEach(t => {
+                        const row = document.createElement('div');
+                        row.className = 'history-item-mini stagger-item';
+                        row.innerHTML = `
+                            <i class="ph-fill ph-check-circle" style="color: var(--icon-green); font-size: 18px;"></i>
+                            <span style="flex:1; font-weight: 600; font-size: 14px;">${t.text}</span>
+                            <span style="font-size:12px; font-weight: 700; color: var(--primary); background: var(--primary-soft); padding: 2px 8px; border-radius: 8px;">${t.time}m</span>
+                        `;
+                        selectedDateTasks.appendChild(row);
+                    });
+                } else {
+                    selectedDateTasks.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-size:14px; margin-top:20px;">Nenhuma tarefa neste dia. Aproveite o descanso!</p>';
+                }
+            };
+
+            grid.appendChild(div);
+        }
+
         this.app.appendChild(clone);
     },
 

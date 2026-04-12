@@ -17,7 +17,9 @@
     
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.0">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    
+    <link rel="stylesheet" href="style.css?v=7.0">
 </head>
 <body>
 
@@ -40,12 +42,12 @@
                 <span>Home</span>
             </button>
             <button class="nav-item" id="nav-stats">
-                <i class="ph ph-chart-bar"></i>
+                <i class="ph-fill ph-chart-bar"></i>
                 <span>Stats</span>
             </button>
-            <button class="nav-item" id="btn-reset-nav">
-                <i class="ph ph-arrows-counter-clockwise"></i>
-                <span>Reset</span>
+            <button class="nav-item" id="nav-calendar">
+                <i class="ph-fill ph-calendar-blank"></i>
+                <span>Diário</span>
             </button>
         </nav>
     </div>
@@ -60,7 +62,7 @@
             <div class="illustration-box">
                 <i class="ph-fill ph-lightning" style="font-size: 64px; color: var(--accent-orange);"></i>
             </div>
-            <h1 class="title-lg">Como está sua<br>energia hoje?</h1>
+            <h1 class="title-lg">Bom dia!<br>Como está sua energia hoje?</h1>
             <div class="energy-list" id="energy-options-container"></div>
         </div>
     </template>
@@ -103,7 +105,7 @@
             <div class="new-task-wrapper">
                 <div class="input-group">
                     <input type="text" id="new-task-input" placeholder="Nova tarefa..." autocomplete="off">
-                    <input type="number" id="new-task-time" placeholder="25" min="1" max="120">
+                    <input type="number" id="new-task-time" placeholder="Min" min="1" max="120">
                     <button id="btn-add-task"><i class="ph-bold ph-plus"></i></button>
                 </div>
             </div>
@@ -112,14 +114,15 @@
 
             <div id="empty-state" class="empty-state hidden">
                 <h2>Tudo limpo! 🎉</h2>
-                <p>Você dominou suas tarefas.</p>
+                <p>Você dominou suas tarefas de hoje.</p>
             </div>
         </div>
     </template>
 
     <template id="tpl-stats">
         <div class="view-wrapper animate-enter">
-            <h2 class="section-title-lg">Seu Progresso</h2>
+            <h2 class="section-title-lg">Visão Geral</h2>
+            
             <div class="hero-card" style="background: var(--primary); margin-bottom: 24px;">
                 <div style="opacity: 0.8; font-size: 14px; margin-bottom: 4px;">Foco Total Acumulado</div>
                 <div style="font-size: 48px; font-weight: 800;" id="total-focus-time">0m</div>
@@ -128,8 +131,7 @@
             
             <h3 class="section-label">Atividade Semanal</h3>
             <div class="chart-container clay-card">
-                <div class="chart-bars" id="chart-bars-container">
-                    </div>
+                <div class="chart-bars" id="chart-bars-container"></div>
             </div>
             
             <h3 class="section-label">Por Energia</h3>
@@ -153,17 +155,28 @@
         </div>
     </template>
 
+    <template id="tpl-calendar">
+        <div class="view-wrapper animate-enter">
+            <h2 class="section-title-lg">Meu Diário</h2>
+            
+            <div class="clay-card">
+                <div class="calendar-header" id="calendar-month-year"></div>
+                <div class="calendar-weekdays">
+                    <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+                </div>
+                <div class="calendar-grid" id="calendar-grid">
+                </div>
+            </div>
+
+            <div id="selected-date-tasks" style="padding-bottom: 80px; margin-top: 24px;">
+            </div>
+        </div>
+    </template>
+
     <script src="script.js"></script>
     
-    <div vw class="enabled">
-        <div vw-access-button class="active"></div>
-        <div vw-plugin-wrapper>
-            <div class="vw-plugin-top-wrapper"></div>
-        </div>
-    </div>
+    <div vw class="enabled"><div vw-access-button class="active"></div><div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div></div>
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-    <script>
-        new window.VLibras.Widget('https://vlibras.gov.br/app');
-    </script>
+    <script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
 </body>
 </html>
